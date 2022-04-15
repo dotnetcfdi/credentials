@@ -1,4 +1,4 @@
-# dotnetcfdi/Credentials
+# dotnetcfdi/credentials
 
 > Library to use eFirma (fiel) and CSD (sellos) from SAT
 
