@@ -122,6 +122,8 @@ Esta librería se mantendrá compatible con al menos la versión con
 También utilizamos [Versionado Semántico 2.0.0](docs/SEMVER.md) por lo que puedes usar esta librería
 sin temor a romper tu aplicación.
 
+Actualmente compatible con `.NET 6`, winforms, console y web. 
+
 ## Contribuciones
 
 Las contribuciones con bienvenidas. Por favor lee [CONTRIBUTING][] para más detalles
