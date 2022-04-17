@@ -99,6 +99,13 @@ sin temor a romper tu aplicación.
 Las contribuciones con bienvenidas. Por favor lee [CONTRIBUTING][] para más detalles
 y recuerda revisar el archivo de tareas pendientes [TODO][] y el archivo [CHANGELOG][].
 
+## Roadmap Features 
+- [x] Convertir certificados del formato original SAT   (X.509 DER ) a X.509 PEM
+- [x] Convertir clave privada  del formato original SAT (PKCS#8 DER) a PKCS#8 PEM
+- [x] Crear archivo .PFX (PKCS#12) a partir de los archivos X.509 PEM y PKCS#8 PEM  (Útil para consumir ws descarga masiva terceros y en algunos PACs para cancelar CFDIs)
+- [ ] Persistencia de los archivos CSD y FIEL en base 64 utilizando entity framework core y bases de datos relacionales
+
+
 ## Copyright and License
 
 The `dotnet/Credentials` library is copyright © [dotnetCfdi](https://www.dotnetcfdi.com/)
