@@ -18,6 +18,18 @@ así como de la llave pública.
 Con esta librería no es necesario convertir los archivos generados por el SAT a otro formato,
 se pueden utilizar tal y como el SAT los entrega.
 
+## Acerca de dotnetcfdi/credentials
+
+Contiene 3 clases relevantes para usted.
+
+`Certificate` Representa un envoltorio del archivo `.cer`, con esta clase se gestiona todo lo relacionado con el certificado, como obtener número de certificado, versión, fecha de vigencia inicial y fecha de vigencia final, así como la conversión del certificado PKCS#8 DER a PKCS#8 PEM y otros datos asociados al certificado. 
+
+`PrivateKey` Representa un envoltorio del archivo `.key`, con esta clase se gestiona todo lo relacionado con la clave privada, dentro de lo más relevante la conversión de la clave privada PKCS#8 DER a PKCS#8 PEM otros datos asociados. 
+ 
+`Credential` Representa un envoltorio que une tanto el Certificate, como el PrivateKey, de tal forma que lo podemos ver como la FIEL o los CSD en conjunto, es decir un objeto `Credencial` reúne las características del `Certificate`, `PrivateKey` y adiciona algunas otras como firmar, validar una firma y crear archivos PFX. 
+
+Tanto la clase `Certificate` como la clase `PrivateKey` implementan el método `GetPemRepresentation();` que hace la conversión del formato  `PKCS#8 DER` a `PKCS#8 PEM`. Los archivos PEM, son los que utiliza la case `Credential` para construir un archivo `PFX(PKCS#12)`.
+
 ## Instalación
 
 Usa [nuget](https://www.nuget.org/)
@@ -26,17 +38,71 @@ Usa [nuget](https://www.nuget.org/)
 Install-Package Credentials
 ```
 
-## Ejemplo básico de uso
+## Uso básico del certificado
 
 ```csharp
-// algun codigo demo...
+//Creating a certificate instance
+var cerPath = @"C:\Users\PHILIPS.JESUSMENDOZA\Desktop\cer.cer";
+var cerBytes = File.ReadAllBytes(cerPath);
+var cerBase64 = Convert.ToBase64String(cerBytes);
+var certificate = new Certificate(cerBase64);
+
+//show certificate basic information
+MessageBox.Show($@"PlainBase64 {certificate.PlainBase64}");
+MessageBox.Show($@"Rfc {certificate.Rfc}");
+MessageBox.Show($@"LegalName {certificate.LegalName}");
+MessageBox.Show($@"SerialNumber {certificate.SerialNumber}");
+MessageBox.Show($@"CertificateNumber {certificate.CertificateNumber}");
+MessageBox.Show($@"ValidFrom {certificate.ValidFrom}");
+MessageBox.Show($@"ValidTo {certificate.ValidTo}");
+
+//Converts X.509 DER base64 or X.509 DER to X.509 PEM
+var pemCertificate = certificate.GetPemRepresentation();
+File.WriteAllText("MyPemCertificate.pem", pemCertificate);
 
 ```
+
+## Uso básico de la clave privada
+
+```csharp
+//Creating a private key instance
+var keyPath = @"C:\Users\PHILIPS.JESUSMENDOZA\Desktop\key.key";
+var keyBytes = File.ReadAllBytes(keyPath);
+var keyBase64 = Convert.ToBase64String(keyBytes);
+var privateKey = new PrivateKey(keyBase64, "YourPassword");
+
+//Converts PKCS#8 DER private key to PKCS#8 PEM
+var PemPrivateKey = privateKey.GetPemRepresentation();
+File.WriteAllText("MyPemPrivateKey.pem", PemPrivateKey);
+```
+
+## Uso básico del objeto credential
+
+```csharp
+//Create a credential instance, certificate and privatekey previously created.
+var fiel = new Credential(certificate, privateKey);
+
+var dataToSign = "Hello world"; //replace with cadena original
+
+//SignData
+var signedBytes = fiel.SignData(dataToSign);
+
+//Verify signature
+var originalDataBytes = Encoding.UTF8.GetBytes(dataToSign);
+var isValid = fiel.VerifyData(originalDataBytes, signedBytes);
+
+//Create pfx file
+var pxfBytes = fiel.CreatePFX();
+File.WriteAllBytes("MyPFX.pfx", pxfBytes);
+```
+
+
+
 
 ## Acerca de los archivos de certificado y llave privada
 
 Los archivos de certificado vienen en formato `X.509 DER` y los de llave privada en formato `PKCS#8 DER`.
-Ambos formatos no se pueden interpretar directamente en PHP (con `ext-openssl`), sin embargo sí lo pueden hacer
+Ambos formatos no se pueden interpretar directamente en C#, sin embargo sí lo pueden hacer
 en el formato compatible [`PEM`](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail).
 
 Esta librería tiene la capacidad de hacer esta conversión internamente (sin `openssl`), pues solo consiste en codificar
@@ -44,44 +110,6 @@ a `base64`, en renglones de 64 caracteres y con cabeceras específicas para cert
 
 De esta forma, para usar el certificado `AAA010101AAA.cer` o la llave privada `AAA010101AAA.key` provistos por
 el SAT, no es necesario convertirlos con `openssl` y la librería los detectará correctamente.
-
-### Crear un objeto de certificado `Certificate`
-
-El objeto `Certificate` no se creará si contiene datos no válidos.
-
-El SAT entrega el certificado en formato `X.509 DER`, por lo que internamente se puede convertir a `X.509 PEM`.
-También es frecuente usar el formato `X.509 DER base64`, por ejemplo, en el atributo `Comprobante@Certificado`
-o en las firmas XML, por este motivo, los formatos soportados para crear un objeto `Certificate` son
-`X.509 DER`, `X.509 DER base64` y `X.509 PEM`.
-
-- Para abrir usando un archivo local: `$certificate = Certificate::openFile($filename);`
-- Para abrir usando una cadena de caracteres: `$certificate = new Certificate($content);`
-  - Si `$content` es un certificado en formato `X.509 PEM` con cabeceras ese se utiliza.
-  - Si `$content` está totalmente en `base64`, se interpreta como `X.509 DER base64` y se formatea a `X.509 PEM`
-  - En otro caso, se interpreta como formato `X.509 DER`, por lo que se formatea a `X.509 PEM`.
-
-### Crear un objeto de llave privada `PrivateKey`
-
-El objeto `PrivateKey` no se creará si contiene datos no válidos.
-
-En SAT entrega la llave en formato `PKCS#8 DER`, por lo que internamente se puede convertir a `PKCS#8 PEM`
-(con la misma contraseña) y usarla desde PHP.
-
-Una vez abierta la llave también se puede cambiar o eliminar la contraseña, creando así un nuevo objeto `PrivateKey`.
-
-- Para abrir usando un archivo local: `$key = PrivateKey::openFile($filename, $passPhrase);`
-- Para abrir usando una cadena de caracteres: `$key = new PrivateKey($content, $passPhrase);`
-  - Si `$content` es una llave privada en formato `PEM` (`PKCS#8` o `PKCS#5`) se utiliza.
-  - En otro caso, se interpreta como formato `PKCS#8 DER`, por lo que se formatea a `PKCS#8 PEM`.
-
-Notas de tratamiento de archivos `DER`:
-
-- Al convertir `PKCS#8 DER` a `PKCS#8 PEM` se determina si es una llave encriptada si se estableció
-  una contraseña, si no se estableció se tratará como una llave plana (no encriptada).
-- No se sabe reconocer de forma automática si se trata de un archivo `PKCS#5 DER` por lo que este
-  tipo de llave se deben convertir *manualmente* antes de intentar abrirlos, su cabecera es `RSA PRIVATE KEY`.
-- A diferencia de los certificados que pueden interpretar un formato `DER base64`, la lectura de llave
-  privada no hace esta distinción, si desea trabajar con un formato sin caracteres especiales use `PEM`.
 
 Para entender más de los formatos de llaves privadas se puede consultar la siguiente liga:
 <https://github.com/kjur/jsrsasign/wiki/Tutorial-for-PKCS5-and-PKCS8-PEM-private-key-formats-differences>
@@ -107,9 +135,8 @@ y recuerda revisar el archivo de tareas pendientes [TODO][] y el archivo [CHANGE
 - [x] Verificar datos firmados
 - [ ] Persistencia de los archivos CSD y FIEL utilizando entity framework core y bases de datos.
 
-
 ## Copyright and License
 
-The `dotnet/Credentials` library is copyright © [dotnetCfdi](https://www.dotnetcfdi.com/)
+The `dotnet/credentials` library is copyright © [dotnetCfdi](https://www.dotnetcfdi.com/)
 and licensed for use under the MIT License (MIT). Please see [LICENSE][] for more information.
 
