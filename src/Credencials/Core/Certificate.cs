@@ -1,12 +1,18 @@
 ﻿using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Credencials.Common;
 
 namespace Credencials.Core
 {
-    public class Certificate : ICertificate
+
+    /// <summary>
+    /// Represents a wrapper for FIEL and CSD certificate.
+    /// </summary>
+    public sealed class Certificate : ICertificate
     {
         private readonly X509Certificate2 _x509Certificate2;
+
 
         public Certificate(string plainBase64)
         {
@@ -14,10 +20,15 @@ namespace Credencials.Core
             _x509Certificate2 = new X509Certificate2(CertificatePlainBytes);
         }
 
-
+        /// <summary>
+        /// The result of reading the bytes from the .cer file and converting them to base64
+        /// </summary>
         public string PlainBase64 { get; }
 
 
+        /// <summary>
+        /// The equivalent of reading the bytes from the .cer file and converting them to base64
+        /// </summary>
         public byte[] CertificatePlainBytes
         {
             get => Convert.FromBase64String(PlainBase64);
@@ -25,55 +36,26 @@ namespace Credencials.Core
 
 
         /// <summary>
-        /// Tax identification number. In México is RFC.
+        /// RFC as parsed from subject/x500UniqueIdentifier 
+        /// see https://oidref.com/2.5.4.45
         /// </summary>
-        public string? Subject
+        public string Rfc
         {
-            get => _x509Certificate2?.Subject;
+            get => Subject.FirstOrDefault(x => x.Key.Equals("OID.2.5.4.45")).Value[..13].Trim();
+        }
+
+
+        /// <summary>
+        /// Legal name as parsed from subject/x500UniqueIdentifier (razón social)
+        /// see https://oidref.com/2.5.4.45
+        /// </summary>
+        public string LegalName
+        {
+            get => Subject.FirstOrDefault(x => x.Key.Equals("O")).Value.Trim();
         }
 
         /// <summary>
-        /// Issuer
-        /// </summary>
-        public string? Issuer
-        {
-            get => _x509Certificate2?.Issuer;
-        }
-
-        /// <summary>
-        /// Version
-        /// </summary>
-        public int Version
-        {
-            get => _x509Certificate2.Version;
-        }
-
-        /// <summary>
-        /// Valid Date
-        /// </summary>
-        public DateTime NotBefore
-        {
-            get => _x509Certificate2.NotBefore;
-        }
-
-        /// <summary>
-        /// Expiry Date
-        /// </summary>
-        public DateTime NotAfter
-        {
-            get => _x509Certificate2.NotAfter;
-        }
-
-        /// <summary>
-        /// Thumbprint
-        /// </summary>
-        public string Thumbprint
-        {
-            get => _x509Certificate2.Thumbprint;
-        }
-
-        /// <summary>
-        /// Serial Number
+        /// All serial number
         /// </summary>
         public string SerialNumber
         {
@@ -81,20 +63,57 @@ namespace Credencials.Core
         }
 
         /// <summary>
-        /// Friendly Name
+        /// Certificate number as Mexican tax authority (SAT) require.
         /// </summary>
-        public string? FriendlyName
+        public string CertificateNumber
         {
-            get => _x509Certificate2.PublicKey.Oid.FriendlyName;
+            get => Encoding.ASCII.GetString(_x509Certificate2.GetSerialNumber().Reverse().ToArray());
+        }
+
+
+        /// <summary>
+        /// Issuer data parsed into KeyValuePair collection
+        /// </summary>
+        public List<KeyValuePair<string, string>> Issuer
+        {
+            get => _x509Certificate2.Issuer.Split(',')
+                .Select(x => new KeyValuePair<string, string>(x.Split('=')[0].Trim(), x.Split('=')[1].Trim())).ToList();
         }
 
         /// <summary>
-        /// Public Key Format
+        /// Subject data parsed into KeyValuePair collection
+        /// see https://oidref.com/2.5.4.45
         /// </summary>
-        public string PublicKeyFormat
+        public List<KeyValuePair<string, string>> Subject
         {
-            get => _x509Certificate2.PublicKey.EncodedKeyValue.Format(true);
+            get => _x509Certificate2.Subject.Split(',')
+                .Select(x => new KeyValuePair<string, string>(x.Split('=')[0].Trim(), x.Split('=')[1].Trim())).ToList();
         }
+
+        /// <summary>
+        /// Certificate version
+        /// </summary>
+        public int Version
+        {
+            get => _x509Certificate2.Version;
+        }
+
+        /// <summary>
+        /// Valid start date
+        /// </summary>
+        public DateTime ValidFrom
+        {
+            get => _x509Certificate2.NotBefore;
+        }
+
+        /// <summary>
+        /// Valid end date
+        /// </summary>
+        public DateTime ValidTo
+        {
+            get => _x509Certificate2.NotAfter;
+        }
+
 
         /// <summary>
         /// Raw Data Length
@@ -105,14 +124,17 @@ namespace Credencials.Core
         }
 
         /// <summary>
-        /// Certificate Raw Data 
+        /// RawDataBytes
         /// </summary>
         public byte[] RawDataBytes
         {
             get => _x509Certificate2.RawData;
         }
 
-
+        /// <summary>
+        /// Convert X.509 DER base64 or X.509 DER to X.509 PEM
+        /// </summary>
+        /// <returns></returns>
         public string GetPemRepresentation()
         {
             var certPem = new string(PemEncoding.Write(Flags.PemCertificate, _x509Certificate2.RawData));

@@ -1,49 +1,35 @@
-﻿using System.Security.Cryptography;
-
-namespace Credencials.Core;
+﻿namespace Credencials.Core;
 
 /// <summary>
-/// Represents a wrapper for FIEL and CSD private key.
+/// Represents a wrapper for certificate and private key. Something like 'FIEL and CSD'
 /// </summary>
-public interface IPrivateKey
+public interface ICredential
 {
-    /// <summary>
-    /// File .key encoded in base64
-    /// </summary>
-    string Base64 { get; }
-
     /// <summary>
     /// Private key password
     /// </summary>
     string PasswordPhrase { get; }
 
     /// <summary>
-    /// Private key RSA object
+    ///  Dotnetcfdi certificate wrapper
     /// </summary>
-    RSA RsaPrivateKey { get; }
+    ICertificate Certificate { get; }
 
     /// <summary>
-    /// File .key in bytes
+    ///  Dotnetcfdi PrivateKey wrapper
     /// </summary>
-    byte[] PrivateKeyBytes { get; }
+    IPrivateKey PrivateKey { get; }
 
-    /// <summary>
-    /// Private key password converted to bytes
-    /// </summary>
-    byte[] PasswordPhraseBytes { get; }
-
-    /// <summary>
-    /// Convert PKCS#8 DER private key to PKCS#8 PEM
-    /// </summary>
-    /// <returns></returns>
-    string GetPemRepresentation();
+    string PemCertificate { get; }
+    string PemPrivateKey { get; }
+    byte[] CreatePFX();
 
     /// <summary>
     /// Sign some data
     /// </summary>
     /// <param name="toSign">string to be signed</param>
     /// <returns>signed bytes</returns>
-    /// see CredentialSettings class
+    /// see CredentialSettings class to see signature parameters
     byte[] SignData(string toSign);
 
     /// <summary>
