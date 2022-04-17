@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9BE6CBEA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{0E3B1093-E552-4D99-8FC7-F5B7DF4753B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Credencials", "src\Credencials\Credencials.csproj", "{697086AB-ED19-4A91-8C31-15B6DABEB3A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Credencials", "src\Credencials\Credencials.csproj", "{697086AB-ED19-4A91-8C31-15B6DABEB3A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

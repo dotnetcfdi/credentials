@@ -1,51 +1,104 @@
 ﻿using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Credencials.Common;
 
-namespace Credencials.Core
+
+namespace Credencials.Core;
+
+/// <summary>
+/// Represents a wrapper for FIEL and CSD private key.
+/// </summary>
+public class PrivateKey : IPrivateKey
 {
-    public class PrivateKey : IPrivateKey
+    public PrivateKey(string fileInbase64, string passwordPhrase)
     {
-        public PrivateKey(string plainBase64, string passwordPhrase)
+        PasswordPhrase = passwordPhrase;
+        Base64 = fileInbase64;
+        RsaPrivateKey = RSA.Create();
+        RsaPrivateKey.ImportEncryptedPkcs8PrivateKey(PasswordPhraseBytes, PrivateKeyBytes, out _);
+    }
+
+    /// <summary>
+    /// File .key encoded in base64
+    /// </summary>
+    public string Base64 { get; }
+
+    /// <summary>
+    /// Private key password
+    /// </summary>
+    public string PasswordPhrase { get; }
+
+    /// <summary>
+    /// Private key RSA object
+    /// </summary>
+    public RSA RsaPrivateKey { get; }
+
+    /// <summary>
+    /// File .key in bytes
+    /// </summary>
+    public byte[] PrivateKeyBytes
+    {
+        get => Convert.FromBase64String(Base64);
+    }
+
+    /// <summary>
+    /// Private key password converted to bytes
+    /// </summary>
+    public byte[] PasswordPhraseBytes
+    {
+        get => Encoding.ASCII.GetBytes(PasswordPhrase);
+    }
+
+    /// <summary>
+    /// Convert PKCS#8 DER private key to PKCS#8 PEM
+    /// </summary>
+    /// <returns></returns>
+    public string GetPemRepresentation()
+    {
+        var keyPem = new string(PemEncoding.Write(Flags.PemPrivateKey, RsaPrivateKey.ExportPkcs8PrivateKey()));
+        return keyPem;
+    }
+
+    /// <summary>
+    /// Sign some data
+    /// </summary>
+    /// <param name="toSign">string to be signed</param>
+    /// <returns>signed bytes</returns>
+    /// see CredentialSettings class
+    public byte[] SignData(string toSign)
+    {
+        //get bytes array to sing
+        var bytesToSign = toSign.GetBytes();
+
+        //Sing and get signed bytes array
+        var signedBytes = RsaPrivateKey.SignData(bytesToSign, CredentialSettings.Algorithm,
+            CredentialSettings.SignaturePadding);
+
+        //Converts signed bytes to base64
+        return signedBytes;
+    }
+
+    /// <summary>
+    /// Verify the signature of some data
+    /// </summary>
+    /// <param name="dataToVerify">original data in bytes</param>
+    /// <param name="signedData">signed data in bytes</param>
+    /// <returns>True when the signature is valid, otherwise false</returns>
+    public bool VerifyData(byte[] dataToVerify, byte[] signedData)
+    {
+        try
         {
-            PasswordPhrase = passwordPhrase;
-            PlainBase64 = plainBase64;
-            RsaPrivateKey = RSA.Create();
-            RsaPrivateKey.ImportEncryptedPkcs8PrivateKey(PasswordPhraseBytes, PrivateKeyBytes, out _);
+            //Validation 
+            var isValid = RsaPrivateKey.VerifyData(dataToVerify, signedData, CredentialSettings.Algorithm,
+                CredentialSettings.SignaturePadding);
+
+
+            return isValid;
         }
-
-        public string PlainBase64 { get; }
-        public string PasswordPhrase { get; }
-        public RSA RsaPrivateKey { get; }
-
-        public byte[] PrivateKeyBytes
+        catch (CryptographicException e)
         {
-            get => Convert.FromBase64String(PlainBase64);
-        }
-
-        public byte[] PasswordPhraseBytes
-        {
-            get => Encoding.ASCII.GetBytes(PasswordPhrase);
-        }
-
-
-        public string GetPemRepresentation()
-        {
-            var keyPem = new string(PemEncoding.Write(Flags.PemPrivateKey, RsaPrivateKey.ExportPkcs8PrivateKey()));
-            return keyPem;
-        }
-
-        private string SignData(string password, byte[] pfx, string toSign, HashAlgorithmName algorithm)
-        {
-            //get bytes array to sing
-            var bytesToSign = toSign.GetBytes();
-
-            //Sing and get signed bytes array
-            var signedBytes = RsaPrivateKey.SignData(bytesToSign, algorithm, RSASignaturePadding.Pss);
-
-            //Converts signed bytes to base64
-            return signedBytes.ToBase64String();
+            Console.WriteLine(e.Message);
+            return false;
         }
     }
 }
