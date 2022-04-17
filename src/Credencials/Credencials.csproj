@@ -4,6 +4,35 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <OutputType>Library</OutputType>
+    <IsPublishable>True</IsPublishable>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <DocumentationFile></DocumentationFile>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
+    <Authors>DotnetCfdi</Authors>
+    <ApplicationIcon>dotnetcfdi-ico.ico</ApplicationIcon>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <PackageId>DotnetCfdi.Credentials</PackageId>
+    <Version>$(AssemblyVersion)</Version>
+    <PackageProjectUrl>https://github.com/dotnetcfdi/credentials</PackageProjectUrl>
+    <PackageIcon>dotnetcfdi-png.png</PackageIcon>
+    <PackageTags>CSD;FIEL;SELLOS;SAT;CFDI;.CER;.Key;PKCS8;PKCS12;PFX;</PackageTags>
+    <Description>Esta librería ha sido creada para poder trabajar con los archivos CSD y FIEL del SAT. De esta forma, se simplifica el proceso de firmar, verificar firma y obtener datos particulares del archivo de certificado así como de la llave pública.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/dotnetcfdi/credentials.git</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="dotnetcfdi-ico.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Desktop\dotnetcfdi-png.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>

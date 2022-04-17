@@ -6,6 +6,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EF61A45D-EA30-4E95-B111-EFC185B07E94}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6889220C-3090-48FD-B2E6-8D93AF4756FD}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Desktop\dotnetcfdi-ico.ico = ..\..\..\Desktop\dotnetcfdi-ico.ico
+		..\..\..\Desktop\dotnetcfdi-png.png = ..\..\..\Desktop\dotnetcfdi-png.png
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9BE6CBEA-D2A2-40F4-9862-46A4FB178F44}"
 EndProject
