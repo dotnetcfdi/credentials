@@ -35,7 +35,7 @@ Tanto la clase `Certificate` como la clase `PrivateKey` implementan el método `
 Usa [nuget](https://www.nuget.org/)
 
 ```shell
-Install-Package DotnetCfdi.Credentials -Version 1.0.1
+Install-Package DotnetCfdi.Credentials -Version 1.1.2
 ```
 
 ## Uso básico del certificado
@@ -50,11 +50,13 @@ var certificate = new Certificate(cerBase64); //puedes guardar cerBase64 en la d
 //show certificate basic information
 MessageBox.Show($@"PlainBase64 {certificate.PlainBase64}");
 MessageBox.Show($@"Rfc {certificate.Rfc}");
-MessageBox.Show($@"LegalName {certificate.LegalName}");
+MessageBox.Show($@"Razón social {certificate.Organization}");
 MessageBox.Show($@"SerialNumber {certificate.SerialNumber}");
 MessageBox.Show($@"CertificateNumber {certificate.CertificateNumber}");
 MessageBox.Show($@"ValidFrom {certificate.ValidFrom}");
 MessageBox.Show($@"ValidTo {certificate.ValidTo}");
+MessageBox.Show($@"IsFiel { certificate.IsFiel()}");
+MessageBox.Show($@"IsValid { certificate.IsValid()}"); // ValidTo > Today
 
 //Converts X.509 DER base64 or X.509 DER to X.509 PEM
 var pemCertificate = certificate.GetPemRepresentation();
@@ -81,6 +83,10 @@ File.WriteAllText("MyPemPrivateKey.pem", PemPrivateKey);
 ```csharp
 //Create a credential instance, certificate and privatekey previously created.
 var fiel = new Credential(certificate, privateKey);
+
+//basic info
+MessageBox.Show($@"CredentialType { fiel.CredentialType}");  // Enum: Fiel || Csd
+MessageBox.Show($@"IsValidFiel { fiel.IsValidFiel()}");      // True when (certificate.ValidTo > Today and  CredentialType == Fiel)
 
 var dataToSign = "Hello world"; //replace with cadena original
 
