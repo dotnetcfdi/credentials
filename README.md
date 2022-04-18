@@ -84,10 +84,6 @@ File.WriteAllText("MyPemPrivateKey.pem", PemPrivateKey);
 //Create a credential instance, certificate and privatekey previously created.
 var fiel = new Credential(certificate, privateKey);
 
-//basic info
-MessageBox.Show($@"CredentialType { fiel.CredentialType}");  // Enum: Fiel || Csd
-MessageBox.Show($@"IsValidFiel { fiel.IsValidFiel()}");      // True when (certificate.ValidTo > Today and  CredentialType == Fiel)
-
 var dataToSign = "Hello world"; //replace with cadena original
 
 //SignData
@@ -100,6 +96,11 @@ var isValid = fiel.VerifyData(originalDataBytes, signedBytes);
 //Create pfx file
 var pxfBytes = fiel.CreatePFX();
 File.WriteAllBytes("MyPFX.pfx", pxfBytes);
+
+//basic info
+MessageBox.Show($@"CredentialType { fiel.CredentialType}");  // Enum: Fiel || Csd
+MessageBox.Show($@"IsValidFiel { fiel.IsValidFiel()}");      // True when (certificate.ValidTo > Today and  CredentialType == Fiel)
+
 ```
 
 
