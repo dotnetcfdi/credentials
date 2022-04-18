@@ -68,8 +68,8 @@ File.WriteAllText("MyPemCertificate.pem", pemCertificate);
 //Creating a private key instance
 var keyPath = @"C:\Users\PHILIPS.JESUSMENDOZA\Desktop\key.key";
 var keyBytes = File.ReadAllBytes(keyPath);
-var keyBase64 = Convert.ToBase64String(keyBytes); //puedes guardar keyBase64 en la db, mismo caso que el certificado.
-var privateKey = new PrivateKey(keyBase64, "YourPassword");
+var keyBase64 = Convert.ToBase64String(keyBytes);
+var privateKey = new PrivateKey(keyBase64, "YourPassword"); //puedes guardar keyBase64 en la db, entonces omite las lineas anteriores y crea el objeto recuperandolo db
 
 //Converts PKCS#8 DER private key to PKCS#8 PEM
 var PemPrivateKey = privateKey.GetPemRepresentation();
