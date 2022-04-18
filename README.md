@@ -44,8 +44,8 @@ Install-Package DotnetCfdi.Credentials -Version 1.0.1
 //Creating a certificate instance
 var cerPath = @"C:\Users\PHILIPS.JESUSMENDOZA\Desktop\cer.cer";
 var cerBytes = File.ReadAllBytes(cerPath);
-var cerBase64 = Convert.ToBase64String(cerBytes);
-var certificate = new Certificate(cerBase64);
+var cerBase64 = Convert.ToBase64String(cerBytes); 
+var certificate = new Certificate(cerBase64); //puedes guardar cerBase64 en la db, entonces omite las lineas anteriores y crea el objeto recuperando cerBase64 de la db
 
 //show certificate basic information
 MessageBox.Show($@"PlainBase64 {certificate.PlainBase64}");
@@ -68,7 +68,7 @@ File.WriteAllText("MyPemCertificate.pem", pemCertificate);
 //Creating a private key instance
 var keyPath = @"C:\Users\PHILIPS.JESUSMENDOZA\Desktop\key.key";
 var keyBytes = File.ReadAllBytes(keyPath);
-var keyBase64 = Convert.ToBase64String(keyBytes);
+var keyBase64 = Convert.ToBase64String(keyBytes); //puedes guardar keyBase64 en la db, mismo caso que el certificado.
 var privateKey = new PrivateKey(keyBase64, "YourPassword");
 
 //Converts PKCS#8 DER private key to PKCS#8 PEM
