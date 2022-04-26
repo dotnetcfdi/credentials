@@ -142,6 +142,7 @@ y recuerda revisar el archivo de tareas pendientes [TODO][] y el archivo [CHANGE
 - [x] Crear archivo .PFX (PKCS#12) a partir de los archivos X.509 PEM y PKCS#8 PEM  (Útil para consumir ws descarga masiva XML y en algunos PACs para cancelar CFDIs)
 - [x] Firmar datos (sellar con el algotitmo `SHA256withRSA`)
 - [x] Verificar datos firmados
+- [x] Computar y validar hash (digest usado en la descaraga masiva xml)
 - [ ] Persistencia de los archivos CSD y FIEL utilizando entity framework core y bases de datos.
 
 ## Copyright and License
