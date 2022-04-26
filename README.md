@@ -35,7 +35,7 @@ Tanto la clase `Certificate` como la clase `PrivateKey` implementan el método `
 Usa [nuget](https://www.nuget.org/)
 
 ```shell
-Install-Package DotnetCfdi.Credentials -Version 1.1.2
+Install-Package DotnetCfdi.Credentials -Version 1.2.3
 ```
 
 ## Uso básico del certificado
@@ -96,6 +96,13 @@ var isValid = fiel.VerifyData(originalDataBytes, signedBytes);
 //Create pfx file
 var pxfBytes = fiel.CreatePFX();
 File.WriteAllBytes("MyPFX.pfx", pxfBytes);
+
+
+//compute and verify hash/digest
+var dataToHash = "xml to get hash"; //replace with canonical representation (c14n) xml. (Descarga masiva xml SAT)
+var hash = fiel.CreateHash(dataToHash); // hash bytes converted into base64 encode.
+var isValidHash  = fiel.VerifyHash(dataToHash, hash); // True | False
+
 
 //basic info
 MessageBox.Show($@"CredentialType { fiel.CredentialType}");  // Enum: Fiel || Csd
