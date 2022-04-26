@@ -1,4 +1,7 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using Credencials.Common;
 
 namespace Credencials.Core;
 
@@ -85,5 +88,73 @@ public class Credential : ICredential
         var isValid = PrivateKey.VerifyData(dataToVerify, signedData);
 
         return isValid;
+    }
+
+
+    /// <summary>
+    /// True if Certificate.ValidTo date is less than the current date
+    /// </summary>
+    public bool IsValid()
+    {
+        return Certificate.IsValid();
+    }
+
+    /// <summary>
+    /// True when is a FIEL certificate
+    /// </summary>
+    public bool IsFiel()
+    {
+        return Certificate.IsFiel();
+    }
+
+    /// <summary>
+    /// True when certificate.ValidTo date is less than the current date and is a FIEL certificate
+    /// </summary>
+    /// <returns></returns>
+    public bool IsValidFiel()
+    {
+        return IsFiel() && IsValid();
+    }
+
+    /// <summary>
+    /// Fiel whe credential.certificate is a FIEL certificate otherwise csd
+    /// </summary>
+    public CredentialType CredentialType
+    {
+        get => Certificate.IsFiel() ? CredentialType.Fiel : CredentialType.Csd;
+    }
+
+    /// <summary>
+    ///  Convert the input string to a byte array and compute the hash.
+    /// </summary>
+    /// <param name="input">data to hashing</param>
+    /// <returns>encoded b64 hash</returns>
+    public string CreateHash(string input)
+    {
+        var inputBytes = Encoding.UTF8.GetBytes(input);
+
+        var hashBytes = CredentialSettings.HashAlgorithm.ComputeHash(inputBytes);
+
+        var encodedBytes = hashBytes.ToBase64String();
+
+        return encodedBytes;
+    }
+
+
+    /// <summary>
+    /// Verify a hash against a string.
+    /// </summary>
+    /// <param name="input">data to hashing</param>
+    /// <param name="hash">encoded b64 hash</param>
+    /// <returns> true when computed hash is same of input hash otherwise false</returns>
+    public bool VerifyHash(string input, string hash)
+    {
+        // Hash the input.
+        var hashOfInput = CreateHash(input);
+
+        // Create a StringComparer an compare the hashes.
+        var comparer = StringComparer.OrdinalIgnoreCase;
+
+        return comparer.Compare(hashOfInput, hash) == 0;
     }
 }

@@ -1,9 +1,5 @@
 ﻿namespace Credencials.Core;
 
-
-/// <summary>
-/// Represents a wrapper for FIEL and CSD certificate.
-/// </summary>
 public interface ICertificate
 {
     /// <summary>
@@ -23,10 +19,33 @@ public interface ICertificate
     string Rfc { get; }
 
     /// <summary>
-    /// Legal name as parsed from subject/x500UniqueIdentifier (razón social)
-    /// see https://oidref.com/2.5.4.45
+    /// Organization = 'razón social'
     /// </summary>
-    string LegalName { get; }
+    string Organization
+    {
+        // CN: CommonName
+        // OU: OrganizationalUnit
+        // O: Organization
+        // L: Locality
+        // S: StateOrProvinceName
+        // C: CountryName
+        get;
+    }
+
+    /// <summary>
+    /// OrganizationalUnit = 'Sucursal'
+    /// As of 2019-08-01 is known that only CSD have OU (Organization Unit)
+    /// </summary>
+    string OrganizationalUnit
+    {
+        // CN: CommonName
+        // OU: OrganizationalUnit
+        // O: Organization
+        // L: Locality
+        // S: StateOrProvinceName
+        // C: CountryName
+        get;
+    }
 
     /// <summary>
     /// All serial number
@@ -34,7 +53,7 @@ public interface ICertificate
     string SerialNumber { get; }
 
     /// <summary>
-    /// Certificate number required by Mexican tax authority (SAT) 
+    /// Certificate number as Mexican tax authority (SAT) require.
     /// </summary>
     string CertificateNumber { get; }
 
@@ -63,6 +82,16 @@ public interface ICertificate
     /// Valid end date
     /// </summary>
     DateTime ValidTo { get; }
+
+    /// <summary>
+    /// True if ValidTo date is less than the current date
+    /// </summary>
+    bool IsValid();
+
+    /// <summary>
+    /// True when is a FIEL certificate
+    /// </summary>
+    bool IsFiel();
 
     /// <summary>
     /// Raw Data Length
