@@ -5,7 +5,6 @@ using Credencials.Common;
 
 namespace Credencials.Core
 {
-
     /// <summary>
     /// Represents a wrapper for FIEL and CSD certificate.
     /// </summary>
@@ -46,13 +45,40 @@ namespace Credencials.Core
 
 
         /// <summary>
-        /// Legal name as parsed from subject/x500UniqueIdentifier (razón social)
-        /// see https://oidref.com/2.5.4.45
+        /// Organization = 'razón social'
         /// </summary>
-        public string LegalName
+        public string Organization
         {
-            get => Subject.FirstOrDefault(x => x.Key.Equals("O")).Value.Trim();
+            // CN: CommonName
+            // OU: OrganizationalUnit
+            // O: Organization
+            // L: Locality
+            // S: StateOrProvinceName
+            // C: CountryName
+            get => ExistsKey(Subject, "O") ? Subject.FirstOrDefault(x => x.Key.Equals("O")).Value.Trim() : string.Empty;
         }
+
+        /// <summary>
+        /// OrganizationalUnit = 'Sucursal'
+        /// As of 2019-08-01 is known that only CSD have OU (Organization Unit)
+        /// </summary>
+        public string OrganizationalUnit
+        {
+            // CN: CommonName
+            // OU: OrganizationalUnit
+            // O: Organization
+            // L: Locality
+            // S: StateOrProvinceName
+            // C: CountryName
+
+            get => ExistsKey(Subject, "OU") ? Subject.FirstOrDefault(x => x.Key.Equals("OU")).Value.Trim() : string.Empty;
+        }
+
+        private static bool ExistsKey(IEnumerable<KeyValuePair<string, string>> keyValuePairs, string key)
+        {
+            return keyValuePairs.Any(pair => pair.Key.Equals(key));
+        }
+
 
         /// <summary>
         /// All serial number
@@ -112,6 +138,22 @@ namespace Credencials.Core
         public DateTime ValidTo
         {
             get => _x509Certificate2.NotAfter;
+        }
+
+        /// <summary>
+        /// True if ValidTo date is less than the current date
+        /// </summary>
+        public bool IsValid()
+        {
+            return ValidTo > DateTime.Now;
+        }
+
+        /// <summary>
+        /// True when is a FIEL certificate
+        /// </summary>
+        public bool IsFiel()
+        {
+            return string.IsNullOrEmpty(OrganizationalUnit);
         }
 
 

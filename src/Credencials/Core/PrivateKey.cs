@@ -71,8 +71,7 @@ public class PrivateKey : IPrivateKey
         var bytesToSign = toSign.GetBytes();
 
         //Sing and get signed bytes array
-        var signedBytes = RsaPrivateKey.SignData(bytesToSign, CredentialSettings.Algorithm,
-            CredentialSettings.SignaturePadding);
+        var signedBytes = RsaPrivateKey.SignData(bytesToSign, CredentialSettings.Algorithm, CredentialSettings.SignaturePadding);
 
         //Converts signed bytes to base64
         return signedBytes;

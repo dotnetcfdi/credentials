@@ -9,8 +9,8 @@
     <IsPublishable>True</IsPublishable>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <DocumentationFile></DocumentationFile>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
-    <FileVersion>1.0.1</FileVersion>
+    <AssemblyVersion>1.1.2</AssemblyVersion>
+    <FileVersion>$(AssemblyVersion)</FileVersion>
     <Authors>DotnetCfdi</Authors>
     <ApplicationIcon>dotnetcfdi-ico.ico</ApplicationIcon>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
@@ -19,9 +19,10 @@
     <PackageProjectUrl>https://github.com/dotnetcfdi/credentials</PackageProjectUrl>
     <PackageIcon>dotnetcfdi-png.png</PackageIcon>
     <PackageTags>CSD;FIEL;SELLOS;SAT;CFDI;.CER;.Key;PKCS8;PKCS12;PFX;</PackageTags>
-    <Description>Esta librería ha sido creada para poder trabajar con los archivos CSD y FIEL del SAT. De esta forma, se simplifica el proceso de firmar, verificar firma y obtener datos particulares del archivo de certificado así como de la llave pública.</Description>
+    <Description>Esta librería es una de varias que existen dentro de dotnetcfdi, fue creada para trabajar con los archivos CSD y FIEL del SAT de manera sencilla en .NET</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/dotnetcfdi/credentials.git</RepositoryUrl>
+    <PackageReleaseNotes>Agrega métodos para diferenciar si el certificado y la credencial son de FIEL o CSD, así como métodos que validan la vigencia tanto del certificado como de la credencial</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
