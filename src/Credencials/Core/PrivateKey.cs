@@ -2,7 +2,6 @@
 using System.Text;
 using Credencials.Common;
 
-
 namespace Credencials.Core;
 
 /// <summary>

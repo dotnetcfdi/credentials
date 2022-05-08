@@ -40,7 +40,7 @@ namespace Credencials.Core
         /// </summary>
         public string Rfc
         {
-            get => Subject.FirstOrDefault(x => x.Key.Equals("OID.2.5.4.45")).Value[..13].Trim();
+            get => SubjectKeyValuePairs.FirstOrDefault(x => x.Key.Equals("OID.2.5.4.45")).Value[..13].Trim();
         }
 
 
@@ -55,7 +55,9 @@ namespace Credencials.Core
             // L: Locality
             // S: StateOrProvinceName
             // C: CountryName
-            get => ExistsKey(Subject, "O") ? Subject.FirstOrDefault(x => x.Key.Equals("O")).Value.Trim() : string.Empty;
+            get => ExistsKey(SubjectKeyValuePairs, "O")
+                ? SubjectKeyValuePairs.FirstOrDefault(x => x.Key.Equals("O")).Value.Trim()
+                : string.Empty;
         }
 
         /// <summary>
@@ -71,7 +73,9 @@ namespace Credencials.Core
             // S: StateOrProvinceName
             // C: CountryName
 
-            get => ExistsKey(Subject, "OU") ? Subject.FirstOrDefault(x => x.Key.Equals("OU")).Value.Trim() : string.Empty;
+            get => ExistsKey(SubjectKeyValuePairs, "OU")
+                ? SubjectKeyValuePairs.FirstOrDefault(x => x.Key.Equals("OU")).Value.Trim()
+                : string.Empty;
         }
 
         private static bool ExistsKey(IEnumerable<KeyValuePair<string, string>> keyValuePairs, string key)
@@ -100,21 +104,40 @@ namespace Credencials.Core
         /// <summary>
         /// Issuer data parsed into KeyValuePair collection
         /// </summary>
-        public List<KeyValuePair<string, string>> Issuer
+        public List<KeyValuePair<string, string>> IssuerKeyValuePairs
         {
             get => _x509Certificate2.Issuer.Split(',')
                 .Select(x => new KeyValuePair<string, string>(x.Split('=')[0].Trim(), x.Split('=')[1].Trim())).ToList();
         }
 
         /// <summary>
+        /// Raw X509Certificate2 Issuer property
+        /// </summary>
+        public string Issuer
+        {
+            get => _x509Certificate2.Issuer;
+        }
+
+
+        /// <summary>
         /// Subject data parsed into KeyValuePair collection
         /// see https://oidref.com/2.5.4.45
         /// </summary>
-        public List<KeyValuePair<string, string>> Subject
+        public List<KeyValuePair<string, string>> SubjectKeyValuePairs
         {
             get => _x509Certificate2.Subject.Split(',')
                 .Select(x => new KeyValuePair<string, string>(x.Split('=')[0].Trim(), x.Split('=')[1].Trim())).ToList();
         }
+
+        /// <summary>
+        /// Raw X509Certificate2 Subject property
+        /// see https://oidref.com/2.5.4.45
+        /// </summary>
+        public string Subject
+        {
+            get => _x509Certificate2.Subject;
+        }
+
 
         /// <summary>
         /// Certificate version
