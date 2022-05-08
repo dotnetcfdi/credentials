@@ -35,7 +35,7 @@ Tanto la clase `Certificate` como la clase `PrivateKey` implementan el método `
 Usa [nuget](https://www.nuget.org/)
 
 ```shell
-Install-Package DotnetCfdi.Credentials -Version 1.2.3
+Install-Package DotnetCfdi.Credentials -Version 1.3.3
 ```
 
 ## Uso básico del certificado
