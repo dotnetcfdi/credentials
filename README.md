@@ -1,14 +1,15 @@
 # dotnetcfdi/credentials
 
-> Library to use eFirma (fiel) and CSD (sellos) from SAT
-
+---
 :us: The documentation of this project is in spanish as this is the natural language for intended audience.
 
 :mexico: La documentación del proyecto está en español porque ese es el lenguaje principal de los usuarios.
 
-Esta librería ha sido creada para poder trabajar con los archivos CSD y FIEL del SAT. De esta forma,
-se simplifica el proceso de firmar, verificar firma y obtener datos particulares del archivo de certificado
-así como de la llave pública.
+---
+
+Esta librería ha sido creada fue creada para trabajar con los archivos CSD y FIEL del SAT de manera sencilla en .NET,
+`Credentials` Simplifica el proceso de firmar (sellar), verificar firma (sello), calcular los hash para los [servicios de descarga masiva xml y metadata]( https://github.com/dotnetcfdi/XmlDownloader/), así como la y obtener datos particulares del archivo de certificado así como de la llave pública .<br>
+
 
 - El CSD (Certificado de Sello Digital) es utilizado para firmar Comprobantes Fiscales Digitales.
 
