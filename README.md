@@ -111,7 +111,7 @@ MessageBox.Show($@"IsValidFiel { fiel.IsValidFiel()}");      // True when (certi
 
 ```
 
-
+[más ejemplos]( https://github.com/mendozagit/DotnetCfdi-Samples/)
 
 
 ## Acerca de los archivos de certificado y llave privada
