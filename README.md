@@ -8,7 +8,7 @@
 ---
 
 Esta librería ha sido creada fue creada para trabajar con los archivos CSD y FIEL del SAT de manera sencilla en .NET,
-`Credentials` Simplifica el proceso de firmar (sellar), verificar firma (sello), calcular los hash para los [servicios de descarga masiva xml y metadata]( https://github.com/dotnetcfdi/XmlDownloader/), así como la y obtener datos particulares del archivo de certificado así como de la llave pública .<br>
+`Credentials` Simplifica el proceso de firmar (sellar), verificar firma (sello), calcular los hash para los [servicios de descarga masiva xml y metadata]( https://github.com/dotnetcfdi/xml-downloader/), así como la y obtener datos particulares del archivo de certificado así como de la llave pública .<br>
 
 
 - El CSD (Certificado de Sello Digital) es utilizado para firmar Comprobantes Fiscales Digitales.
