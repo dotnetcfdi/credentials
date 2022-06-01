@@ -75,4 +75,25 @@ public interface ICredential
     /// <param name="hash">encoded b64 hash</param>
     /// <returns> true when computed hash is same of input hash otherwise false</returns>
     bool VerifyHash(string input, string hash);
+
+
+    /// <summary>
+    /// Transform XML documents into Pipe character in accordance with the schemes established in Mexican legislation.
+    /// </summary>
+    /// <param name="xmlAsString"> Xml file as string</param>
+    /// <returns>cadena original</returns>
+    public string GetOriginalStringByXmlString(string xmlAsString);
+
+
+    /// <summary>
+    /// Configure the Signature algorithm to do invoicing, using the donetcfdi/invoicing library.
+    /// The default value is HashAlgorithmName.SHA1 (used for downloading xml), call ConfigureAlgorithmForInvoicing() methost to set HashAlgorithmName.SHA256 when you need to sign invoices. 
+    /// </summary>
+    public void ConfigureAlgorithmForInvoicing();
+
+    /// <summary>
+    /// Configure the Signature algorithm to do xml-downloader, using the donetcfdi/xml-downloader library.
+    /// The default value is HashAlgorithmName.SHA1 (used for downloading xml), call ConfigureAlgorithmForXmlDownloader() method to set HashAlgorithmName.SHA1 when you need to download xml. 
+    /// </summary>
+    public void ConfigureAlgorithmForXmlDownloader();
 }

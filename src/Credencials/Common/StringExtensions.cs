@@ -11,7 +11,7 @@ namespace Credencials.Common
         /// <returns>base64 encoded string</returns>
         public static string EncodeToBase64(this string plainText)
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             return Convert.ToBase64String(plainTextBytes);
         }
 

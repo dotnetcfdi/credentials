@@ -2,7 +2,6 @@
 using System.Text;
 using Credencials.Common;
 
-
 namespace Credencials.Core;
 
 /// <summary>
@@ -71,7 +70,7 @@ public class PrivateKey : IPrivateKey
         var bytesToSign = toSign.GetBytes();
 
         //Sing and get signed bytes array
-        var signedBytes = RsaPrivateKey.SignData(bytesToSign, CredentialSettings.Algorithm, CredentialSettings.SignaturePadding);
+        var signedBytes = RsaPrivateKey.SignData(bytesToSign, CredentialSettings.SignatureAlgorithm, CredentialSettings.SignaturePadding);
 
         //Converts signed bytes to base64
         return signedBytes;
@@ -88,7 +87,7 @@ public class PrivateKey : IPrivateKey
         try
         {
             //Validation 
-            var isValid = RsaPrivateKey.VerifyData(dataToVerify, signedData, CredentialSettings.Algorithm,
+            var isValid = RsaPrivateKey.VerifyData(dataToVerify, signedData, CredentialSettings.SignatureAlgorithm,
                 CredentialSettings.SignaturePadding);
 
 

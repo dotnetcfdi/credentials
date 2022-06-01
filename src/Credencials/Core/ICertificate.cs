@@ -44,6 +44,7 @@ public interface ICertificate
         // L: Locality
         // S: StateOrProvinceName
         // C: CountryName
+
         get;
     }
 
@@ -60,13 +61,24 @@ public interface ICertificate
     /// <summary>
     /// Issuer data parsed into KeyValuePair collection
     /// </summary>
-    List<KeyValuePair<string, string>> Issuer { get; }
+    List<KeyValuePair<string, string>> IssuerKeyValuePairs { get; }
+
+    /// <summary>
+    /// Raw X509Certificate2 Issuer property
+    /// </summary>
+    string Issuer { get; }
 
     /// <summary>
     /// Subject data parsed into KeyValuePair collection
     /// see https://oidref.com/2.5.4.45
     /// </summary>
-    List<KeyValuePair<string, string>> Subject { get; }
+    List<KeyValuePair<string, string>> SubjectKeyValuePairs { get; }
+
+    /// <summary>
+    /// Raw X509Certificate2 Subject property
+    /// see https://oidref.com/2.5.4.45
+    /// </summary>
+    string Subject { get; }
 
     /// <summary>
     /// Certificate version
@@ -84,16 +96,6 @@ public interface ICertificate
     DateTime ValidTo { get; }
 
     /// <summary>
-    /// True if ValidTo date is less than the current date
-    /// </summary>
-    bool IsValid();
-
-    /// <summary>
-    /// True when is a FIEL certificate
-    /// </summary>
-    bool IsFiel();
-
-    /// <summary>
     /// Raw Data Length
     /// </summary>
     int RawDataLength { get; }
@@ -102,6 +104,16 @@ public interface ICertificate
     /// RawDataBytes
     /// </summary>
     byte[] RawDataBytes { get; }
+
+    /// <summary>
+    /// True if ValidTo date is less than the current date
+    /// </summary>
+    bool IsValid();
+
+    /// <summary>
+    /// True when is a FIEL certificate
+    /// </summary>
+    bool IsFiel();
 
     /// <summary>
     /// Convert X.509 DER base64 or X.509 DER to X.509 PEM
