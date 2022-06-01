@@ -1,5 +1,8 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Xml;
+using System.Xml.Xsl;
 using Credencials.Common;
 
 namespace Credencials.Core;
@@ -155,5 +158,57 @@ public class Credential : ICredential
         var comparer = StringComparer.OrdinalIgnoreCase;
 
         return comparer.Compare(hashOfInput, hash) == 0;
+    }
+
+
+    /// <summary>
+    /// Transform XML documents into Pipe character in accordance with the schemes established in Mexican legislation.
+    /// </summary>
+    /// <param name="xmlAsString"> Xml file as string</param>
+    /// <returns>cadena original</returns>
+    public string GetOriginalStringByXmlString(string xmlAsString)
+    {
+        if (string.IsNullOrEmpty(CredentialSettings.OriginalStringPath))
+            throw new ArgumentNullException(nameof(CredentialSettings.OriginalStringPath),
+                "The path to cadenaoriginal.xslt file cannot be null or empty.");
+
+
+        if (string.IsNullOrEmpty(xmlAsString))
+            throw new ArgumentNullException(nameof(xmlAsString),
+                "The xml to calculate the original string cannot be null or empty.");
+
+        using var stringReader = new StringReader(xmlAsString);
+        using var xmlReader = XmlReader.Create(stringReader);
+        using var stringWriter = new Utf8StringWriter();
+
+        var xsltSettings = new XsltSettings
+        {
+            EnableDocumentFunction = true,
+            EnableScript = true
+        };
+        var resolver = new XmlUrlResolver();
+        var transformer = new XslCompiledTransform();
+
+        transformer.Load(CredentialSettings.OriginalStringPath, xsltSettings, resolver);
+        transformer.Transform(xmlReader, null, stringWriter);
+        return stringWriter.ToString();
+    }
+
+    /// <summary>
+    /// Configure the Signature algorithm to do invoicing, using the donetcfdi/invoicing library.
+    /// The default value is HashAlgorithmName.SHA1 (used for downloading xml), call ConfigureAlgorithmForInvoicing() methost to set HashAlgorithmName.SHA256 when you need to sign invoices. 
+    /// </summary>
+    public void ConfigureAlgorithmForInvoicing()
+    {
+        CredentialSettings.SignatureAlgorithm = HashAlgorithmName.SHA256;
+    }
+
+    /// <summary>
+    /// Configure the Signature algorithm to do xml-downloader, using the donetcfdi/xml-downloader library.
+    /// The default value is HashAlgorithmName.SHA1 (used for downloading xml), call ConfigureAlgorithmForXmlDownloader() method to set HashAlgorithmName.SHA1 when you need to download xml. 
+    /// </summary>
+    public void ConfigureAlgorithmForXmlDownloader()
+    {
+        CredentialSettings.SignatureAlgorithm = HashAlgorithmName.SHA1;
     }
 }

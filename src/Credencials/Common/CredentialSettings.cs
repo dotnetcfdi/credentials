@@ -7,7 +7,7 @@ public static class CredentialSettings
     /// <summary>
     /// Default algorithm to sing mexican invoicing 
     /// </summary>
-    public static HashAlgorithmName Algorithm { get; set; } = HashAlgorithmName.SHA1;
+    public static HashAlgorithmName SignatureAlgorithm { get; set; } = HashAlgorithmName.SHA1;
 
     /// <summary>
     /// Default signature padding
@@ -18,4 +18,9 @@ public static class CredentialSettings
     /// Default algorithm to digest SAT services
     /// </summary>
     public static HashAlgorithm HashAlgorithm { get; set; } = SHA1.Create();
+
+    /// <summary>
+    /// Path of the CadenaOriginal.xslt file to do XML data transformation using an XSLT stylesheet.
+    /// </summary>
+    public static string? OriginalStringPath { get; set; }
 }
