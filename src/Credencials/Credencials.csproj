@@ -9,32 +9,27 @@
     <IsPublishable>True</IsPublishable>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <DocumentationFile></DocumentationFile>
-    <AssemblyVersion>1.4.5</AssemblyVersion>
+    <AssemblyVersion>4.0.5</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
-    <Authors>DotnetCfdi</Authors>
+    <Authors>AztecaSoft</Authors>
     <ApplicationIcon>dotnetcfdi-ico.ico</ApplicationIcon>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
-    <PackageId>DotnetCfdi.Credentials</PackageId>
-    <Version>$(AssemblyVersion)</Version>
+    <PackageId>AztecaSoft.DotNetCfdi.Credentials</PackageId>
+    <Version>4.0.5</Version>
     <PackageProjectUrl>https://github.com/dotnetcfdi/credentials.git</PackageProjectUrl>
-    <PackageIcon>dotnetcfdi-png.png</PackageIcon>
+    <PackageIcon></PackageIcon>
     <PackageTags>CSD;FIEL;SELLOS;SAT;CFDI;.CER;.Key;PKCS8;PKCS12;PFX;</PackageTags>
-    <Description>Esta librería es una de varias que existen dentro de dotnetcfdi, fue creada para trabajar con los archivos CSD y FIEL del SAT de manera sencilla en .NET</Description>
+    <Description>This library is one of several that exist within dotnetcfdi, it was created to work with SAT CSD and FIEL files in a simple way in .NET.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/dotnetcfdi/credentials.git</RepositoryUrl>
     <PackageReleaseNotes>Se agregan propiedades al objeto certificado para el uso del servicio de descarga masiva xml </PackageReleaseNotes>
-    <Copyright>DotnetCfdi</Copyright>
+    <Copyright>AztecaSoft-All Rights Reserved.</Copyright>
+    <Title>This library is one of several that exist within dotnetcfdi, it was created to work with SAT credentials</Title>
+    <Company>AztecaSoft</Company>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="dotnetcfdi-ico.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\..\..\..\Desktop\dotnetcfdi-png.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>
